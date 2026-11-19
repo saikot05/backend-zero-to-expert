@@ -98,10 +98,154 @@
 ---
 
 ## 🚧 Coming next in this module
+## 5. Node.js
+
+**English:** [Node.js](https://nodejs.org/) lets you run JavaScript outside the browser, so you can build servers and APIs. It uses Google's V8 engine to run your code. It also installs **npm** (Node Package Manager), a tool to download and manage packages (libraries written by other developers).
+
+**বাংলা:** Node.js দিয়ে browser এর বাইরে JavaScript চালানো যায়, তাই এটা দিয়ে server ও API বানানো সম্ভব। ভেতরে Google এর V8 engine কাজ করে। Node এর সাথে **npm** (Node Package Manager) আসে, যা দিয়ে অন্যদের লেখা package (library) download ও manage করা যায়।
+
+### Install
+
+1. Go to [nodejs.org/en/download](https://nodejs.org/en/download)
+2. Download the version marked **LTS** (Long Term Support), not "Current"
+3. Run the installer and keep all default options
+4. **Close and reopen** your terminal
+
+> 💡 **Why LTS?** LTS gets security fixes and bug fixes for a long time, so it is stable and used by companies. See the [release schedule](https://nodejs.org/en/about/previous-releases).
+>
+> LTS মানে বেশি দিন bug fix ও security update পাওয়া যায়, তাই এটা stable।
+
+### Verify
+
+```bash
+node -v
+npm -v
+```
+
+Both should print a version number (for example `v24.x.x`). If you see `'node' is not recognized`, restart the terminal or reinstall Node.
+
+### Try it
+
+```bash
+node
+> 2 + 3
+5
+> console.log("Hello")
+Hello
+```
+
+Press `Ctrl + C` twice (or type `.exit`) to leave the Node shell.
+
+### What is npm?
+
+| Command | What it does | বাংলা |
+|---|---|---|
+| `npm init -y` | Create a `package.json` | project এর ID card বানায় |
+| `npm install express` | Install a package | package install করে |
+| `npm install -D nodemon` | Install a dev-only package | শুধু development এর package |
+| `npm uninstall express` | Remove a package | package মুছে ফেলে |
+| `npm run dev` | Run a script from `package.json` | script চালায় |
+
+> 📚 **Learn more:** [Node.js official learn page](https://nodejs.org/en/learn) · [npm Docs](https://docs.npmjs.com/)
+>
+> 🔧 **Optional (later):** Need multiple Node versions? Use [nvm](https://github.com/nvm-sh/nvm) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows).
+
+---
+
+## 6. Git
+
+**English:** [Git](https://git-scm.com/) is a **version control system**. It saves snapshots (called **commits**) of your project, so you can go back in time, see what changed, and work in a team without overwriting each other.
+
+**বাংলা:** Git হলো একটা **version control system**। এটা তোমার project এর snapshot (**commit**) জমিয়ে রাখে, যাতে পুরনো অবস্থায় ফেরা যায়, কী বদলেছে দেখা যায় এবং team এ একসাথে কাজ করা যায়।
+
+### Install
+
+1. Go to [git-scm.com/downloads](https://git-scm.com/downloads) and download for your OS
+2. Run the installer and keep the default options (on Windows this also installs **Git Bash**)
+3. Reopen the terminal and verify:
+
+```bash
+git --version
+```
+
+### One-time configuration
+
+Tell Git who you are. Use the **same email** as your GitHub account:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+```
+
+Check it:
+
+```bash
+git config --list
+```
+
+### The mental model: 3 areas
+
+Think of sending a parcel:
+
+```
+Working Folder  ──git add──▶  Staging Area  ──git commit──▶  Local Repo  ──git push──▶  GitHub
+ (your files)                 (put in the box)               (box sealed,                 (sent online)
+                                                              saved in history)
+```
+
+**বাংলা:** Parcel পাঠানোর মতো ভাবো: কাজের folder → `git add` (box এ রাখা) → `git commit` (box seal করে history তে save) → `git push` (GitHub এ পাঠানো)।
+
+### Everyday commands
+
+| Command | What it does | বাংলা |
+|---|---|---|
+| `git status` | Show what changed | কী কী বদলেছে দেখাও |
+| `git add .` | Stage all changes | সব change staging এ রাখো |
+| `git add file.js` | Stage one file | একটা file staging এ রাখো |
+| `git commit -m "message"` | Save a snapshot | snapshot save করো |
+| `git log --oneline` | Show commit history | history দেখাও |
+| `git diff` | Show exact line changes | কোন line বদলেছে দেখাও |
+| `git push` | Upload commits to GitHub | GitHub এ পাঠাও |
+| `git pull` | Download latest changes | GitHub থেকে নতুন change আনো |
+| `git clone <url>` | Copy a repository | repository copy করো |
+
+### Branches (quick intro)
+
+A **branch** is a separate line of work. You try new things on a branch without breaking `main`.
+
+```bash
+git branch                 # list branches
+git switch -c feature-x    # create and move to a new branch
+git switch main            # go back to main
+git merge feature-x        # bring feature-x into main
+```
+
+**বাংলা:** Branch হলো আলাদা একটা কাজের লাইন। `main` না ভেঙে নতুন কিছু try করা যায়।
+
+### Writing good commit messages
+
+Use a short prefix so history stays clean (this follows [Conventional Commits](https://www.conventionalcommits.org/)):
+
+| Prefix | Use for | Example |
+|---|---|---|
+| `feat:` | new feature | `feat: add login route` |
+| `fix:` | bug fix | `fix: handle empty email` |
+| `docs:` | documentation | `docs: add setup guide` |
+| `refactor:` | code cleanup | `refactor: split user service` |
+
+> 📚 **Learn more:**
+> - [Pro Git Book (free)](https://git-scm.com/book/en/v2)
+> - [Learn Git Branching (interactive game)](https://learngitbranching.js.org/)
+> - [Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials)
+> - [GitHub Git Cheat Sheet (PDF)](https://education.github.com/git-cheat-sheet-education.pdf)
+
+---
+
+## 🚧 Coming next in this module
 
 | Part | Topics |
 |---|---|
-| Part 2 | Node.js, Git |
 | Part 3 | GitHub and Repository, Postman |
 | Part 4 | MongoDB Atlas, PostgreSQL |
 | Part 5 | First Node.js server, Common errors, Practice tasks, Interview questions, Resources |
