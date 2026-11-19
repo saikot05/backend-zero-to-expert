@@ -566,8 +566,310 @@ Free cloud Postgres exists, for example [Neon](https://neon.tech/) and [Supabase
 
 ---
 
-## 🚧 Coming next in this module
+## 11. First Node.js Program and Server
 
-| Part | Topics |
-|---|---|
-| Part 5 | First Node.js server, `.env` and `.gitignore`, Common errors, Practice tasks, Interview questions, Resources |
+### Step 1: Create a project folder
+
+```bash
+mkdir my-first-server
+cd my-first-server
+npm init -y
+```
+
+`npm init -y` creates `package.json`, the **ID card** of your project (name, scripts, dependencies).
+
+**বাংলা:** `package.json` হলো project এর ID card, যেখানে নাম, script আর dependency লেখা থাকে।
+
+### Step 2: Hello, Backend
+
+Create `hello.js`:
+
+```js
+console.log("Hello, Backend!");
+```
+
+Run it:
+
+```bash
+node hello.js
+```
+
+You just ran JavaScript without a browser.
+
+### Step 3: Your first HTTP server
+
+Create `server.js`:
+
+```js
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  if (req.url === "/") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("My first server is running!");
+  } else if (req.url === "/api/hello") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Hello from the API", status: "ok" }));
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.end("Not Found");
+  }
+});
+
+const PORT = 3000;
+
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+```
+
+Run it:
+
+```bash
+node server.js
+```
+
+Open these in your browser or Postman:
+
+- `http://localhost:3000/` → text response
+- `http://localhost:3000/api/hello` → JSON response
+- `http://localhost:3000/anything` → `404 Not Found`
+
+Stop the server with `Ctrl + C`.
+
+### Line by line
+
+| Code | Meaning | বাংলা |
+|---|---|---|
+| `require("http")` | Load Node's built-in `http` module ([docs](https://nodejs.org/api/http.html)) | built-in http module আনে |
+| `http.createServer(...)` | Create a server. The function runs on **every request** | server বানায়, প্রতি request এ function চলে |
+| `req` | The **request** (url, method, headers) | client যা পাঠিয়েছে |
+| `res` | The **response** we send back | আমরা যা ফেরত পাঠাব |
+| `res.writeHead(200, ...)` | Set status code and headers | status code ও header ঠিক করে |
+| `res.end(...)` | Send the body and finish the response | response পাঠিয়ে শেষ করে |
+| `server.listen(3000)` | Wait for requests on port 3000 | port 3000 এ request এর জন্য অপেক্ষা করে |
+
+> 🔗 This connects to what you learned in Node.js architecture: this single thread, the **event loop** and **libuv** handle many requests without blocking. We go deep in Module 03.
+
+### Auto-restart on file change
+
+Restarting by hand is boring. Use Node's built-in watch mode:
+
+```bash
+node --watch server.js
+```
+
+(Alternative: [nodemon](https://www.npmjs.com/package/nodemon) via `npm install -D nodemon`.)
+
+### Add scripts to package.json
+
+```json
+"scripts": {
+  "start": "node server.js",
+  "dev": "node --watch server.js"
+}
+```
+
+Now run `npm run dev` (development) or `npm start` (normal run).
+
+---
+
+## 12. Environment Variables (`.env`) and `.gitignore`
+
+**English:** Secrets like database passwords and API keys must **never** be written inside your code or pushed to GitHub. We keep them in a `.env` file, and Git ignores that file.
+
+**বাংলা:** Database password, API key এর মতো গোপন তথ্য code এ লিখবে না, GitHub এ push করবে না। এগুলো `.env` file এ রাখো আর Git কে সেটা ignore করতে বলো।
+
+### Step 1: Create `.env`
+
+```
+PORT=3000
+MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/backend_practice
+```
+
+### Step 2: Make sure `.gitignore` has these lines
+
+```
+node_modules/
+.env
+```
+
+(If you chose the **Node** template when creating your repo, `.gitignore` already includes them.)
+
+### Step 3: Read values in code
+
+Node 20.6+ can load `.env` without any package:
+
+```bash
+node --env-file=.env server.js
+```
+
+Then in your code:
+
+```js
+const PORT = process.env.PORT || 3000;
+```
+
+> Older Node or prefer a package? Use [dotenv](https://www.npmjs.com/package/dotenv): `npm install dotenv`, then `require("dotenv").config();` at the top of your file.
+
+### Step 4: Share a safe template
+
+Create `.env.example` with **fake values** and commit this one:
+
+```
+PORT=3000
+MONGODB_URI=your_mongodb_connection_string_here
+DATABASE_URL=your_postgres_connection_string_here
+```
+
+> ⚠️ **If you accidentally pushed a secret:** deleting the file is not enough, because it stays in Git history. **Change the password or key immediately** (rotate it).
+
+---
+
+## 13. Common Errors and Fixes
+
+| Error | Reason | Fix |
+|---|---|---|
+| `'node' is not recognized` | Terminal opened before install, or PATH problem | Close and reopen the terminal, or reinstall Node |
+| `EADDRINUSE: address already in use :::3000` | Another program uses port 3000 | Stop the old server with `Ctrl + C`, or change the port |
+| `Cannot find module 'express'` | Package not installed or wrong file name | Run `npm install`, check spelling |
+| `git push` rejected | GitHub has commits you do not have | `git pull`, then `git push` |
+| `Authentication failed` (Git) | Not logged in | Log in via browser, or use a token or SSH |
+| Atlas: `connection timed out` | Your IP is not allowed | Add your IP in **Network Access** |
+| Atlas: `bad auth` | Wrong database user or password | Check the DB user (not your Atlas login) and URL-encode special characters |
+| `psql: command not found` | Postgres `bin` not in PATH | Add it to PATH, reopen terminal |
+| `password authentication failed for user "postgres"` | Wrong Postgres password | Use the password you set during install |
+| `SyntaxError: Unexpected token` | Typo, missing bracket or comma | Read the line number in the error and check it |
+
+**বাংলা:** Error message মন দিয়ে পড়ো। বেশিরভাগ সময় সমাধান message এর মধ্যেই লেখা থাকে। না বুঝলে error টা Google করো বা [Stack Overflow](https://stackoverflow.com/) এ খোঁজো।
+
+---
+
+## 14. Practice Tasks
+
+Do these yourself. Do not copy-paste.
+
+1. Create a folder `practice` using **only terminal commands**, then `cd` into it
+2. Write `hello.js` that prints your name and today's date (`new Date()`), then run it
+3. Change `server.js` to reply with your name on `/`, and add a new route `/about`
+4. Test all routes in **Postman** and in the browser, and check the status codes
+5. Move the `PORT` into `.env` and read it with `process.env.PORT`
+6. Make **3 commits** with clear messages (`feat:`, `fix:`, `docs:`) and push them
+7. Connect **MongoDB Compass** to your Atlas cluster
+8. Create a `products` table in PostgreSQL with `id`, `name`, `price`, insert 3 rows, then select only rows where price is above 100
+
+**Challenge ⭐:** Add a route `/api/time` that returns the current time as JSON.
+
+---
+
+## 15. Interview Questions
+
+Say answers in your own words. Do not memorize.
+
+**Q1. What is Node.js?**
+A JavaScript runtime that lets us run JavaScript outside the browser, mostly to build servers and APIs. It uses Google's V8 engine.
+*বাংলা:* Node.js একটা JavaScript runtime, ভেতরে V8 engine আছে।
+
+**Q2. Node.js vs JavaScript?**
+JavaScript is the language. Node.js is the environment that runs it outside the browser and gives extra modules like `fs`, `http`, `os`.
+
+**Q3. What is npm?**
+Node Package Manager. It installs, updates and removes packages for our project.
+
+**Q4. `package.json` vs `package-lock.json`?**
+`package.json` lists the project info, scripts and dependencies. `package-lock.json` locks the exact version of every installed package, so every developer gets the same result.
+
+**Q5. `dependencies` vs `devDependencies`?**
+`dependencies` are needed when the app runs (express, mongoose). `devDependencies` are only for development (nodemon, eslint).
+
+**Q6. Why use the LTS version?**
+It gets long-term bug and security fixes, so it is stable for real projects.
+
+**Q7. Git vs GitHub?**
+Git is a tool on our computer that tracks changes. GitHub is a website that stores Git repositories online and helps teams collaborate.
+
+**Q8. `git add` vs `git commit` vs `git push`?**
+`add` puts changes in the staging area, `commit` saves a snapshot locally, `push` uploads commits to GitHub.
+
+**Q9. `git pull` vs `git fetch`?**
+`fetch` downloads new changes but does not touch our files. `pull` downloads **and** merges them.
+
+**Q10. What is a branch and why use it?**
+A separate line of work. We build features without breaking the stable `main` branch.
+
+**Q11. What is `.gitignore`?**
+A file that tells Git which files to skip, like `node_modules` (too big) and `.env` (secrets).
+
+**Q12. Why never push `.env`?**
+It holds secrets like database passwords and API keys. Anyone who sees them can misuse our database or services.
+
+**Q13. What is `localhost` and a port?**
+`localhost` means our own computer. A port is a numbered door where a program listens (like 3000).
+
+**Q14. What is Postman used for?**
+To test APIs: send GET, POST, PUT, DELETE requests and check the response without a frontend.
+
+**Q15. What does `require()` do?**
+It loads a module (built-in, our own file or an installed package). This is the CommonJS system.
+
+**Q16. What is the difference between `req` and `res`?**
+`req` is what the client sends to the server. `res` is what the server sends back.
+
+**Q17. SQL vs NoSQL?**
+SQL (PostgreSQL) uses fixed tables and relations, great for structured, connected data (orders, payments). NoSQL (MongoDB) uses flexible documents, handy when data shape changes often.
+
+**Q18. What is a primary key?**
+A column (like `id`) that uniquely identifies each row.
+
+**Q19. What is a connection string?**
+One URL that tells our app where the database is and how to log in (host, port, user, password, database name).
+
+**Q20. Why MongoDB Atlas instead of local MongoDB?**
+No heavy install, free tier, works anywhere, and it is close to real production setups.
+
+> 💡 **Interview tip:** After every answer, add one tiny real example from your own project. It makes the answer sound real, not memorized.
+> প্রতিটা উত্তরের পর নিজের project থেকে একটা ছোট উদাহরণ দাও, এতে উত্তর আসল মনে হয়।
+
+---
+
+## 16. Best Resources
+
+### 📘 Docs and books
+- [Node.js Learn](https://nodejs.org/en/learn) · [Node.js API Docs](https://nodejs.org/api/)
+- [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+- [javascript.info](https://javascript.info/)
+- [Pro Git Book (free)](https://git-scm.com/book/en/v2)
+- [PostgreSQL Tutorial (official)](https://www.postgresql.org/docs/current/tutorial.html)
+- [MongoDB Manual](https://www.mongodb.com/docs/manual/)
+
+### 🎓 Free courses
+- [The Odin Project](https://www.theodinproject.com/)
+- [freeCodeCamp](https://www.freecodecamp.org/)
+- [MongoDB University](https://learn.mongodb.com/)
+- [GitHub Skills](https://skills.github.com/)
+- [roadmap.sh: Backend Roadmap](https://roadmap.sh/backend)
+
+### 🎮 Practice
+- [Learn Git Branching](https://learngitbranching.js.org/)
+- [JSONPlaceholder (fake API)](https://jsonplaceholder.typicode.com/)
+- [SQLBolt (interactive SQL)](https://sqlbolt.com/)
+
+---
+
+## ✅ Module Checklist
+
+- [ ] `node -v`, `npm -v` and `git --version` all work
+- [ ] VS Code installed with extensions
+- [ ] Repository created, cloned, and pushed to GitHub
+- [ ] Postman GET and POST tested
+- [ ] MongoDB Atlas connected (Compass works)
+- [ ] PostgreSQL running, `psql` login works
+- [ ] First server runs on `localhost:3000`
+- [ ] `.env` created and ignored by Git
+
+---
+
+## ➡️ Next Module
+
+**[01-web-fundamentals](../01-web-fundamentals)**: Internet, IP, TCP, DNS, HTTP request and response, status codes, client-server model.

@@ -21,7 +21,7 @@
 
 | # | Module | Status |
 |---|---|---|
-| 00 | [Setup](./00-setup) | 🚧 In progress |
+| 00 | [Setup](./00-setup) | ✅ Done |
 | 01 | Web Fundamentals | ⏳ Planned |
 | 02 | JavaScript for Backend | ⏳ Planned |
 | 03 | Node.js Core | ⏳ Planned |
