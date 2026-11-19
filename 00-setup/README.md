@@ -383,9 +383,191 @@ You should see JSON data and status **200 OK**. ([JSONPlaceholder](https://jsonp
 
 ---
 
+## 9. MongoDB Atlas
+
+**English:** [MongoDB](https://www.mongodb.com/) is a **NoSQL** database. It stores data as flexible, JSON-like **documents** instead of rows and columns. [MongoDB Atlas](https://www.mongodb.com/atlas) is its cloud version, which has a free tier, so you do not need to install a database on your computer.
+
+**বাংলা:** MongoDB একটা **NoSQL** database। এখানে data row-column এর বদলে JSON এর মতো flexible **document** আকারে থাকে। Atlas হলো এর cloud version, free tier আছে, তাই computer এ কিছু install করতে হয় না।
+
+### Key terms
+
+| SQL world | MongoDB world | বাংলা |
+|---|---|---|
+| Database | Database | database |
+| Table | Collection | table এর মতো, documents এর group |
+| Row | Document | একটা record (JSON আকারে) |
+| Column | Field | document এর একটা property |
+
+Example document:
+
+```json
+{
+  "_id": "665f1c2a9b1e8a0012345678",
+  "name": "Saikot",
+  "email": "saikot@example.com",
+  "skills": ["JavaScript", "Node.js"]
+}
+```
+
+### Step 1: Create a free cluster
+
+1. Sign up at [mongodb.com/cloud/atlas/register](https://www.mongodb.com/cloud/atlas/register)
+2. Create a new **Project**, then click **Create** a cluster
+3. Choose the **Free (M0)** plan
+4. Choose a region close to you (for Bangladesh, a nearby Asian region is usually fastest)
+5. Click **Create**
+
+> 📝 Atlas menus and names change sometimes. If a button looks different, follow the [official Getting Started guide](https://www.mongodb.com/docs/atlas/getting-started/).
+
+### Step 2: Create a database user
+
+Go to **Database Access** → **Add New Database User**.
+
+- Authentication: **Password**
+- Choose a username and a **strong password** (save it safely)
+- Privileges: **Read and write to any database**
+
+> ⚠️ This is the **database user**, different from your Atlas login account.
+> এটা database এর user, তোমার Atlas login account না।
+
+### Step 3: Allow network access
+
+Go to **Network Access** → **Add IP Address**.
+
+- Best: click **Add Current IP Address**
+- For learning only: `0.0.0.0/0` (allow from anywhere). **Never use this in real production.**
+
+If you see a timeout error later, your IP changed. Add it again here.
+
+### Step 4: Get the connection string
+
+1. Go to **Database** → click **Connect** on your cluster
+2. Choose **Drivers** (Node.js)
+3. Copy the connection string:
+
+```
+mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+```
+
+Replace `<username>` and `<password>` with your database user. If the password has special characters (like `@` or `#`), [URL-encode them](https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding).
+
+### Step 5: Visual check with MongoDB Compass
+
+[MongoDB Compass](https://www.mongodb.com/products/tools/compass) is a free GUI. Install it, paste your connection string, and click **Connect**. If you can connect, your setup is correct.
+
+> 🔐 **Golden rule:** Never put your password directly in code or push it to GitHub. We store it in a `.env` file (see Section 11).
+>
+> **সোনালি নিয়ম:** Password কখনো সরাসরি code এ লিখবে না বা GitHub এ push করবে না।
+
+> 📚 **Learn more:** [Atlas Docs](https://www.mongodb.com/docs/atlas/) · [MongoDB Manual](https://www.mongodb.com/docs/manual/) · [MongoDB University (free courses)](https://learn.mongodb.com/)
+
+---
+
+## 10. PostgreSQL
+
+**English:** [PostgreSQL](https://www.postgresql.org/) (Postgres) is a powerful open-source **relational (SQL)** database. Data lives in **tables** with rows and columns, and tables are connected through **relations**. It is widely used for apps where data is structured and connected, like users, orders and payments.
+
+**বাংলা:** PostgreSQL একটা শক্তিশালী open-source **relational (SQL)** database। Data **table** এ row-column আকারে থাকে এবং table গুলো **relation** দিয়ে যুক্ত থাকে। User, order, payment এর মতো structured data এর জন্য এটা খুব জনপ্রিয়।
+
+### Install (local)
+
+1. Go to [postgresql.org/download](https://www.postgresql.org/download/) and choose your OS
+2. On Windows, download the installer (from EDB) and run it
+3. Keep the default port **5432**
+4. Set a password for the `postgres` superuser and **remember it**
+5. Keep **pgAdmin 4** and **Command Line Tools** ticked
+
+### Verify
+
+Open a **new** terminal:
+
+```bash
+psql --version
+psql -U postgres
+```
+
+Enter your password. If you see `postgres=#`, you are inside the Postgres shell.
+
+> If `psql` is not recognized on Windows, add the Postgres `bin` folder to your PATH (for example `C:\Program Files\PostgreSQL\<version>\bin`), then reopen the terminal.
+
+### Your first database and table
+
+Run these inside `psql`:
+
+```sql
+CREATE DATABASE backend_practice;
+\l                        -- list all databases
+\c backend_practice       -- connect to your database
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO users (name, email) VALUES ('Saikot', 'saikot@example.com');
+INSERT INTO users (name, email) VALUES ('Rahim', 'rahim@example.com');
+
+SELECT * FROM users;
+SELECT name FROM users WHERE id = 1;
+
+UPDATE users SET name = 'Saikot Ahmed' WHERE id = 1;
+DELETE FROM users WHERE id = 2;
+
+\dt                       -- list tables
+\q                        -- quit
+```
+
+### CRUD in SQL
+
+| Operation | SQL | বাংলা |
+|---|---|---|
+| Create | `INSERT INTO` | নতুন row যোগ |
+| Read | `SELECT` | data পড়া |
+| Update | `UPDATE ... SET ... WHERE` | data বদলানো |
+| Delete | `DELETE FROM ... WHERE` | data মোছা |
+
+> ⚠️ **Always use `WHERE` with `UPDATE` and `DELETE`.** Without it, you change or delete every row.
+> `UPDATE` আর `DELETE` এ সবসময় `WHERE` দেবে, না দিলে সব row বদলে যাবে বা মুছে যাবে।
+
+### pgAdmin (visual tool)
+
+Open **pgAdmin 4** (installed with Postgres), log in with your `postgres` password, then go to **Servers → PostgreSQL → Databases → backend_practice → Schemas → public → Tables** to see your `users` table. Right-click a table → **View/Edit Data → All Rows**.
+
+### Connection string
+
+```
+postgresql://postgres:YOUR_PASSWORD@localhost:5432/backend_practice
+```
+
+Format: `postgresql://USER:PASSWORD@HOST:PORT/DATABASE`
+
+### Prefer no local install? Cloud options
+
+Free cloud Postgres exists, for example [Neon](https://neon.tech/) and [Supabase](https://supabase.com/). Free plans change, so check their pricing pages for the current limits.
+
+> 📚 **Learn more:** [PostgreSQL Official Tutorial](https://www.postgresql.org/docs/current/tutorial.html) · [PostgreSQL Docs](https://www.postgresql.org/docs/) · [PostgreSQL Tutorial (beginner friendly)](https://www.postgresqltutorial.com/) · [pgAdmin Docs](https://www.pgadmin.org/docs/)
+
+---
+
+## 🧠 MongoDB vs PostgreSQL at a glance
+
+| | MongoDB | PostgreSQL |
+|---|---|---|
+| Type | NoSQL (document) | SQL (relational) |
+| Data shape | Flexible JSON documents | Fixed tables, rows, columns |
+| Relations | Possible, but manual | Strong, built in (joins, foreign keys) |
+| Best for | Changing data shape, fast prototypes | Structured, connected, transaction-heavy data |
+| Query language | MongoDB Query API | SQL |
+| Our tools | Mongoose (Module 06b) | `pg` and Prisma (Module 06c, 06d) |
+
+**বাংলা:** কোনটা ভালো সেটা না, কোন কাজে কোনটা মানায় সেটাই আসল প্রশ্ন। আমরা দুটোই শিখব।
+
+---
+
 ## 🚧 Coming next in this module
 
 | Part | Topics |
 |---|---|
-| Part 4 | MongoDB Atlas, PostgreSQL |
-| Part 5 | First Node.js server, Common errors, Practice tasks, Interview questions, Resources |
+| Part 5 | First Node.js server, `.env` and `.gitignore`, Common errors, Practice tasks, Interview questions, Resources |
