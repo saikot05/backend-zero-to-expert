@@ -242,10 +242,150 @@ Use a short prefix so history stays clean (this follows [Conventional Commits](h
 
 ---
 
+## 7. GitHub and Repository
+
+**English:** [GitHub](https://github.com/) is a website that stores your Git repositories online. It is your public portfolio, your backup, and the place where teams collaborate. Recruiters often check it.
+
+**বাংলা:** GitHub এমন একটা website যেখানে তোমার Git repository online এ থাকে। এটা তোমার portfolio, backup, আর team এর কাজের জায়গা। Recruiter রা প্রায়ই GitHub profile দেখে।
+
+### Step 1: Create an account
+
+Sign up at [github.com/signup](https://github.com/signup). Choose a **professional username** (your real name works best), because it appears in your profile link.
+
+### Step 2: Create a repository
+
+1. Click **+** (top right) → **New repository**
+2. Fill **Repository name** and **Description**
+3. Choose **Public** (so others can learn from it)
+4. Turn on **Add README**, choose **Node** for `.gitignore`, and choose **MIT License**
+5. Click **Create repository**
+
+### Step 3: Clone it to your computer
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+cd YOUR-REPO
+code .
+```
+
+**বাংলা:** Repository এর page এ সবুজ **Code** button চেপে HTTPS URL copy করো, তারপর `git clone` দাও।
+
+### Step 4: The daily workflow
+
+```bash
+# 1. make changes in your files, then:
+git status
+git add .
+git commit -m "docs: describe what you changed"
+git push
+```
+
+The first `git push` opens a browser window to log in to GitHub. Log in once and Git remembers you.
+
+> 🔐 **Authentication options**
+> - **HTTPS + browser login** (default, easiest for beginners)
+> - **SSH keys** (optional, more convenient later): [GitHub SSH guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+> - **Personal Access Token** if a password is asked: [Creating a token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+>
+> GitHub এ এখন account password দিয়ে `git push` হয় না, browser login বা token লাগে।
+
+### Make your repository look professional
+
+| Item | Why it matters |
+|---|---|
+| Clear `README.md` | First thing visitors read |
+| **Topics** (About → ⚙️) | People can find your repo in search |
+| `LICENSE` | Tells others how they can use your work |
+| `.gitignore` | Keeps secrets and junk out of Git |
+| Small, meaningful commits | Shows how you work |
+
+> 💡 **Bonus:** Create a special repo named exactly like your username to get a [profile README](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme) on your GitHub home page. Also **pin** your best repos.
+
+### Common Git and GitHub problems
+
+| Problem | Fix |
+|---|---|
+| `git push` rejected (non-fast-forward) | Run `git pull`, then `git push` again |
+| `Authentication failed` | Log in again via browser, or use a token or SSH |
+| `fatal: not a git repository` | You are in the wrong folder, `cd` into the repo |
+| Pushed `.env` by mistake | Rotate (change) the secrets immediately, then remove the file from Git |
+
+> 📚 **Learn more:** [GitHub Docs: Get started](https://docs.github.com/en/get-started) · [GitHub Skills (free interactive courses)](https://skills.github.com/) · [First Contributions](https://github.com/firstcontributions/first-contributions)
+
+---
+
+## 8. Postman
+
+**English:** [Postman](https://www.postman.com/) is a tool to send HTTP requests to a server and see the response, without writing any frontend code. Backend developers use it to test APIs every day.
+
+**বাংলা:** Postman দিয়ে frontend না লিখেই server এ request পাঠিয়ে response দেখা যায়। Backend developer রা প্রতিদিন API test করতে এটা ব্যবহার করে।
+
+### Install
+
+1. Download from [postman.com/downloads](https://www.postman.com/downloads/)
+2. Install and open it (you can skip sign-in or create a free account)
+
+> 🔧 **Alternative:** [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) works inside VS Code if you prefer one window.
+
+### Your first request (GET)
+
+1. Click **New → HTTP** (or the **+** tab)
+2. Method: **GET**
+3. URL: `https://jsonplaceholder.typicode.com/posts/1`
+4. Click **Send**
+
+You should see JSON data and status **200 OK**. ([JSONPlaceholder](https://jsonplaceholder.typicode.com/) is a free fake API made for practice.)
+
+### Your first POST request
+
+1. Method: **POST**, URL: `https://jsonplaceholder.typicode.com/posts`
+2. Open **Body → raw → JSON** and write:
+
+```json
+{
+  "title": "My first post",
+  "body": "Learning backend with Postman",
+  "userId": 1
+}
+```
+
+3. Click **Send**. You should get status **201 Created** and your data back with an `id`.
+
+### HTTP methods (CRUD)
+
+| Method | Purpose | CRUD | বাংলা |
+|---|---|---|---|
+| `GET` | Read data | Read | data আনো |
+| `POST` | Create new data | Create | নতুন data বানাও |
+| `PUT` | Replace data fully | Update | পুরো data বদলাও |
+| `PATCH` | Update part of data | Update | আংশিক বদলাও |
+| `DELETE` | Remove data | Delete | data মুছো |
+
+### Important status codes
+
+| Code | Meaning | বাংলা |
+|---|---|---|
+| `200 OK` | Success | সফল |
+| `201 Created` | New data created | নতুন data তৈরি হয়েছে |
+| `400 Bad Request` | Wrong data sent by client | client এর ভুল data |
+| `401 Unauthorized` | Not logged in | login করা নেই |
+| `403 Forbidden` | Logged in but not allowed | অনুমতি নেই |
+| `404 Not Found` | Data or route not found | খুঁজে পাওয়া যায়নি |
+| `500 Internal Server Error` | Server crashed or bug | server এর ভুল |
+
+> 📚 **Learn more:** [MDN: HTTP methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) · [MDN: HTTP status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) · [Postman Learning Center](https://learning.postman.com/)
+
+### Good habits in Postman
+
+- Save requests in a **Collection** (example: `backend-zero-to-expert`)
+- Use **Environment variables** (like `{{baseUrl}}`) instead of repeating `http://localhost:3000`
+- Always check both the **status code** and the **response body**
+
+---
+
 ## 🚧 Coming next in this module
 
 | Part | Topics |
 |---|---|
-| Part 3 | GitHub and Repository, Postman |
 | Part 4 | MongoDB Atlas, PostgreSQL |
 | Part 5 | First Node.js server, Common errors, Practice tasks, Interview questions, Resources |
