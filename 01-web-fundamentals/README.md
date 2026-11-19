@@ -45,13 +45,11 @@ Complete [00-setup](../00-setup). Nothing else needed.
 
 ```mermaid
 flowchart TB
-    subgraph NET["🌐 The Internet (the roads: cables, routers, ISPs)"]
-        direction LR
-        WEB["🕸️ The Web<br/>(websites, APIs)"]
-        MAIL["📧 Email"]
-        GAME["🎮 Online games"]
-        CALL["📹 Video calls"]
-    end
+    NET["The Internet<br/>(the roads: cables, routers, ISPs)"]
+    NET --> WEB["The Web<br/>(websites, APIs)"]
+    NET --> MAIL["Email"]
+    NET --> GAME["Online games"]
+    NET --> CALL["Video calls"]
 ```
 
 > 📚 **Learn more:** [MDN: How does the Internet work?](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/How_does_the_Internet_work) · [Cloudflare: How does the Internet work?](https://www.cloudflare.com/learning/network-layer/how-does-the-internet-work/)
@@ -80,13 +78,13 @@ Think of a **restaurant**:
 
 ```mermaid
 sequenceDiagram
-    participant C as 🧑 Client (Browser)
-    participant S as 🖥️ Server (Backend)
-    participant D as 🗄️ Database
-    C->>S: 1. Request (GET /products)
-    S->>D: 2. Ask for data
-    D-->>S: 3. Return data
-    S-->>C: 4. Response (JSON or HTML)
+    participant C as Client Browser
+    participant S as Server Backend
+    participant D as Database
+    C->>S: 1 Request GET /products
+    S->>D: 2 Ask for data
+    D-->>S: 3 Return data
+    S-->>C: 4 Response JSON or HTML
 ```
 
 > **Key point:** The client **always starts** the conversation. A server only **responds**. (Later we will see exceptions like WebSockets.)
@@ -115,7 +113,7 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    U["👤 User<br/>clicks / touches"] --> UI["🖥️ Frontend<br/>HTML + CSS + JS<br/>(runs in the browser)"]
+    U["User clicks or touches"] --> UI["Frontend: HTML, CSS, JS<br/>runs in the browser"]
 ```
 
 > 📚 **Learn more:** [MDN: Learn web development](https://developer.mozilla.org/en-US/docs/Learn)
@@ -136,15 +134,9 @@ At its core, **a backend is an HTTP server**: a program that listens for HTTP re
 
 ```mermaid
 flowchart LR
-    REQ["📩 HTTP Request"] --> BE
-    subgraph BE["⚙️ Backend (HTTP Server)"]
-        direction TB
-        L["Business Logic"]
-        SEC["Security"]
-        DM["Data Management"]
-    end
-    BE <--> DB[("🗄️ Database")]
-    BE --> RES["📤 HTTP Response"]
+    REQ["HTTP Request"] --> BE["Backend HTTP Server<br/>Business logic, Security, Data management"]
+    BE <--> DB[("Database")]
+    BE --> RES["HTTP Response"]
 ```
 
 **Backend languages and runtimes** (you can build a backend in almost any language):
@@ -167,16 +159,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    subgraph CLIENTSIDE["👤 Client side (Frontend)"]
-        B["🌐 Browser<br/>HTML · CSS · JS"]
-    end
-    subgraph SERVERSIDE["🖥️ Server side (Backend)"]
-        S["⚙️ Node.js Server<br/>logic · security"]
-        DB[("🗄️ MongoDB<br/>PostgreSQL")]
-    end
-    B -- "HTTP Request" --> S
-    S -- "HTTP Response" --> B
-    S <--> DB
+    B["Browser<br/>HTML, CSS, JS"] -->|HTTP Request| S["Node.js Server<br/>logic, security"]
+    S -->|HTTP Response| B
+    S <--> DB[("MongoDB or PostgreSQL")]
 ```
 
 **বাংলা:** User browser এ click করে → frontend server এ HTTP request পাঠায় → backend logic চালিয়ে database থেকে data আনে → response ফেরত পাঠায় → browser সেটা screen এ দেখায়।
@@ -194,8 +179,8 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    B["🌐 Browser"] -- "GET /index.html" --> S["📁 Server<br/>index.html<br/>style.css<br/>app.js"]
-    S -- "same ready file" --> B
+    B["Browser"] -->|"GET /index.html"| S["Server<br/>index.html, style.css, app.js"]
+    S -->|"same ready file"| B
 ```
 
 ---
@@ -212,16 +197,11 @@ Template engines: [EJS](https://ejs.co/) · [Pug](https://pugjs.org/) · [Handle
 
 ```mermaid
 flowchart LR
-    B["🌐 Browser"] -- "1. Request" --> S
-    subgraph S["🖥️ Server"]
-        direction TB
-        T["📄 Template<br/>(EJS / Pug / HBS)"]
-        D[("🗄️ Database")]
-        R["🔨 Render:<br/>template + data = HTML"]
-        T --> R
-        D --> R
-    end
-    S -- "2. Ready HTML page" --> B
+    B["Browser"] -->|Request| S["Server"]
+    S --> R["Render step<br/>template and data make HTML"]
+    T["Template: EJS, Pug, HBS"] --> R
+    D[("Database")] --> R
+    R -->|Ready HTML page| B
 ```
 
 **বাংলা:** **Template-based (SSR):** Server নিজেই template আর database data মিলিয়ে পুরো HTML page বানায়, তারপর তৈরি page browser এ পাঠায়। একে **Server-Side Rendering** বলে।
@@ -232,16 +212,16 @@ The server **only sends raw data** (usually **JSON**) through an **API**. The **
 
 ```mermaid
 sequenceDiagram
-    participant B as 🌐 Browser
-    participant S as 🖥️ Server (API)
-    participant D as 🗄️ Database
-    B->>S: 1. Give me the app (HTML + CSS + JS shell)
-    S-->>B: Empty shell + JavaScript files
-    B->>S: 2. GET /api/products
+    participant B as Browser
+    participant S as Server API
+    participant D as Database
+    B->>S: 1 Give me the app shell
+    S-->>B: Empty HTML shell and JavaScript files
+    B->>S: 2 GET /api/products
     S->>D: Query
     D-->>S: Data
-    S-->>B: 3. JSON data {"name":"Shoe","price":50}
-    Note over B: 4. React builds the page<br/>in the browser
+    S-->>B: 3 JSON data
+    Note over B: 4 React builds the page in the browser
 ```
 
 **বাংলা:** **API-based (CSR):** Server শুধু **কাঁচা data (JSON)** পাঠায়। Browser এ JavaScript (React, Next.js) সেই data দিয়ে page বানায়। একে **Client-Side Rendering** বলে। **এই course এ আমরা মূলত API বানানো শিখব** (Building API)।
@@ -267,11 +247,10 @@ Example of what an API sends (JSON):
 
 ```mermaid
 flowchart LR
-    API["🖥️ One Backend<br/>(API)"]
-    API --> W["🌐 Website"]
-    API --> M["📱 Mobile App"]
-    API --> D["💻 Desktop App"]
-    API --> X["⌚ Other devices"]
+    API["One Backend API"] --> W["Website"]
+    API --> M["Mobile App"]
+    API --> D["Desktop App"]
+    API --> X["Other devices"]
 ```
 
 > 📚 **Learn more:** [Red Hat: What is an API?](https://www.redhat.com/en/topics/api/what-are-application-programming-interfaces) · [MDN: Introduction to web APIs](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Introduction)
