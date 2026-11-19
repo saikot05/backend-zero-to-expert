@@ -1,7 +1,7 @@
 # 🚀 Backend Zero to Expert
 
 > Complete backend development guide from zero to expert, in **Bangla and English**.
-> Node.js · Express · MongoDB · PostgreSQL · Interview Prep
+> Node.js · Express · MongoDB · PostgreSQL · Prisma · Interview Prep
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Level](https://img.shields.io/badge/level-beginner%20to%20expert-green)
@@ -13,6 +13,10 @@
 
 **বাংলা:** Professional backend developer হওয়ার জন্য ধাপে ধাপে শেখার path। প্রতিটা module এ theory, code example, practice task, interview question আর সেরা free resource এর link আছে।
 
+## 🛠️ Tech Stack
+
+[Node.js](https://nodejs.org/) · [Express](https://expressjs.com/) · [MongoDB](https://www.mongodb.com/) · [PostgreSQL](https://www.postgresql.org/) · [Prisma](https://www.prisma.io/) · [Git](https://git-scm.com/) · [Postman](https://www.postman.com/)
+
 ## 🗺️ Roadmap
 
 | # | Module | Status |
@@ -23,7 +27,7 @@
 | 03 | Node.js Core | ⏳ Planned |
 | 04 | npm and Git | ⏳ Planned |
 | 05 | Express.js | ⏳ Planned |
-| 06 | Databases (MongoDB and PostgreSQL) | ⏳ Planned |
+| 06 | Databases (MongoDB, PostgreSQL, Prisma) | ⏳ Planned |
 | 07 | REST API Design | ⏳ Planned |
 | 08 | Authentication | ⏳ Planned |
 | 09 | Security | ⏳ Planned |
@@ -33,6 +37,32 @@
 | 13 | Deployment | ⏳ Planned |
 | 14 | Projects | ⏳ Planned |
 | 15 | Interview Prep | ⏳ Planned |
+
+## 📂 Repository Structure
+
+```
+backend-zero-to-expert/
+├── 00-setup/
+├── 01-web-fundamentals/
+├── 02-javascript-for-backend/
+├── 03-nodejs-core/
+├── 04-npm-and-git/
+├── 05-express-js/
+├── 06-databases/
+│   ├── 06a-sql-vs-nosql/
+│   ├── 06b-mongodb-mongoose/
+│   ├── 06c-postgresql/
+│   └── 06d-prisma-orm/
+├── 07-rest-api-design/
+├── 08-authentication/
+├── 09-security/
+├── 10-typescript-backend/
+├── 11-testing/
+├── 12-advanced/
+├── 13-deployment/
+├── 14-projects/
+└── 15-interview-prep/
+```
 
 ## 🧭 How to use
 
